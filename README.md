@@ -20,43 +20,18 @@
 4. **レビューとマージ**
    管理者が変更内容と Plan 結果をレビューします。承認され `main` ブランチにマージされると、自動的に `terraform apply` が実行され、Cloudflare 上の設定が本番環境へ反映されます。
 
-## ローカルでの検証（管理者・開発者向け）
+## ローカルでの検証方法
 
-ローカル環境で直接 Terraform の計画作成や検証を行う場合、Docker Compose による実行環境を利用可能です。
+手元で `terraform plan` などの動作確認を行う場合は、以下の手順に従ってください。
 
-### 1. 認証情報の設定
+1. `terraform.tfvars.example` をコピーして `terraform.tfvars` を作成します。
 
-リポジトリ直下に `.env` ファイルを作成し、必要な環境変数を設定します（必要な変数は `docker-compose.yaml` や `terraform.tfvars.example` を参照してください）。
+   ```sh
+   cp terraform.tfvars.example terraform.tfvars
+   ```
 
-```env
-TF_TOKEN_APP_TERRAFORM_IO=...
-CLOUDFLARE_API_TOKEN=...
-CLOUDFLARE_ZONE_ID=...
-CLOUDFLARE_ACCOUNT_ID=...
-TOROPON_IP=...
-ARGOTUNNEL_CNAME_TARGET=...
-GITHUB_PAGES_CHALLENGE_CONTENT=...
-```
-
-### 2. コマンドの実行
-
-初期化:
-
-```bash
-docker compose run --rm terraform init
-```
-
-設定の差分確認:
-
-```bash
-docker compose run --rm terraform plan
-```
-
-設定の適用:
-
-```bash
-docker compose run --rm terraform apply
-```
+2. 作成した `terraform.tfvars` に、ご自身の環境の値を設定してください。
+※ `terraform.tfvars` は `.gitignore` で除外されているため、リポジトリにはコミットされません。
 
 ## セキュリティに関する注意
 

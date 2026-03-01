@@ -1,18 +1,6 @@
-# Cloudflare API トークン
-# DNS:Edit, Zone:Read 権限が必要です
-cloudflare_api_token = "your_api_token"
-
-# torosaba.net の Zone ID
-cloudflare_zone_id = "your_zone_id"
-
-# Cloudflare アカウント ID
-cloudflare_account_id = "your_account_id"
-
-# toropon IPアドレス
-toropon_ip = "toropo_ip_address"
-
-# Cloudflare Argo Tunnel の CNAME ターゲット
-argotunnel_cname_target = "your_argotunnel_uuid.cfargotunnel.com"
-
-# GitHub Pages challenge 用の TXT レコード内容 (例: "\"d8f55c0...\"")
-github_pages_challenge_content = "\"your_challenge_string\""
+cloudflare_api_token = "your_cloudflare_api_token_here"
+cloudflare_zone_id   = "your_cloudflare_zone_id_here"
+cloudflare_account_id = "your_cloudflare_account_id_here"
+toropon_ip           = "toropon_ip_address"
+argotunnel_cname_target = "your_argo_tunnel_uuid.cfargotunnel.com"
+github_pages_challenge_content = "your_github_pages_challenge_content_here"
