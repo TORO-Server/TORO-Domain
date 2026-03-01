@@ -1,45 +1,64 @@
-# torosaba.net ドメイン管理 (Terraform)
+# TORO-Domain (torosaba.net ドメイン管理)
 
-`torosaba.net` ドメイン設定を Terraform で管理します。
+`torosaba.net` ドメインの DNS レコードや設定を Terraform で一元管理するためのリポジトリです。
+このリポジトリは公開されており、コミュニティメンバーからの貢献（Pull Request）を受け付けています。
 
-## 事前準備
+## コントリビュート方法（コミュニティ向け）
 
-1. **Terraform のインストール**
+ドメイン設定の追加や変更を提案する場合は、以下の手順に従ってください。
 
-   既にインストール済みでない場合は、以下のコマンドでインストール可能です。
+1. **リポジトリの Fork**
+   本リポジトリを自身の GitHub アカウントに Fork します。
 
-   ```powershell
-   winget install Hashicorp.Terraform
-   ```
+2. **変更の作成**
+   `.tf` ファイル（主に `main.tf`）を編集し、必要な DNS レコード等の追加・修正を行います。
 
-1. **認証資格情報の設定**
+3. **Pull Request (PR) の作成**
+   変更をコミットし、本リポジトリの `main` ブランチに対して PR を作成します。
+   PR を作成すると、GitHub Actions により自動的に `terraform plan` が実行され、変更内容の差分（Plan 結果）が確認できます。
 
-   `terraform.tfvars.example` を参考に `terraform.tfvars` ファイルを作成し認証資格情報などを設定してください。
+4. **レビューとマージ**
+   管理者が変更内容と Plan 結果をレビューします。承認され `main` ブランチにマージされると、自動的に `terraform apply` が実行され、Cloudflare 上の設定が本番環境へ反映されます。
 
-   ```powershell
-   cp terraform.tfvars.example terraform.tfvars
-   ```
+## ローカルでの検証（管理者・開発者向け）
 
-## 基本操作
+ローカル環境で直接 Terraform の計画作成や検証を行う場合、Docker Compose による実行環境を利用可能です。
 
-### 初期化
+### 1. 認証情報の設定
 
-初回、またはプラグインの更新が必要な際に実行します。
+リポジトリ直下に `.env` ファイルを作成し、必要な環境変数を設定します（必要な変数は `docker-compose.yaml` や `terraform.tfvars.example` を参照してください）。
 
-```powershell
-terraform init
+```env
+TF_TOKEN_APP_TERRAFORM_IO=...
+CLOUDFLARE_API_TOKEN=...
+CLOUDFLARE_ZONE_ID=...
+CLOUDFLARE_ACCOUNT_ID=...
+TOROPON_IP=...
+ARGOTUNNEL_CNAME_TARGET=...
+GITHUB_PAGES_CHALLENGE_CONTENT=...
 ```
 
-### 変更の確認
+### 2. コマンドの実行
 
-現時点の設定（`.tf` ファイル）と実際の Cloudflare 上の設定の差分を確認します。
+初期化:
 
-```powershell
-terraform plan
+```bash
+docker compose run --rm terraform init
 ```
 
-### 変更の適用
+設定の差分確認:
 
-```powershell
-terraform apply
+```bash
+docker compose run --rm terraform plan
 ```
+
+設定の適用:
+
+```bash
+docker compose run --rm terraform apply
+```
+
+## セキュリティに関する注意
+
+- 秘密情報（API トークンや Zone ID など）は管理者の GitHub Secrets を通じて安全に管理されており、本リポジトリのソースコード上には含まれていません。
+- プルリクエストを作成する際は、秘密情報をコード内に直接ハードコード（直書き）しないよう十分に注意してください。
