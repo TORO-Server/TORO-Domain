@@ -14,6 +14,15 @@ resource "cloudflare_record" "minuma_a" {
   ttl     = 1
 }
 
+resource "cloudflare_record" "lgb_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "lgb"
+  content = var.toropon_ip
+  type    = "A"
+  proxied = false
+  ttl     = 1
+}
+
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "torosaba.net"
@@ -74,6 +83,24 @@ resource "cloudflare_record" "minecraft_srv_minuma" {
     weight   = 100
     port     = 27248
     target   = "minuma.torosaba.net"
+  }
+}
+
+resource "cloudflare_record" "minecraft_srv_lgb" {
+  zone_id  = cloudflare_zone.torosaba_net.id
+  name     = "_minecraft._tcp.lgb"
+  type     = "SRV"
+  proxied  = false
+  ttl      = 1
+  priority = 50
+  data {
+    service  = "_minecraft"
+    proto    = "_tcp"
+    name     = "lgb"
+    priority = 50
+    weight   = 100
+    port     = 27248
+    target   = "lgb.torosaba.net"
   }
 }
 
