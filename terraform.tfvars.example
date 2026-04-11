@@ -1,6 +1,0 @@
-cloudflare_api_token = "your_cloudflare_api_token_here"
-cloudflare_zone_id   = "your_cloudflare_zone_id_here"
-cloudflare_account_id = "your_cloudflare_account_id_here"
-toropon_ip           = "toropon_ip_address"
-argotunnel_cname_target = "your_argo_tunnel_uuid.cfargotunnel.com"
-github_pages_challenge_content = "your_github_pages_challenge_content_here"

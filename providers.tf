@@ -1,13 +1,14 @@
 terraform {
-  # HCP Terraform (Terraform Cloud) によるリモートステート管理
-  # 移行手順:
-  # 1. https://app.terraform.io でアカウント・Organizationを作成
-  # 2. 以下の "your-org-name" を作成したOrganization名に変更
-  cloud {
-    organization = "your-org-name"
-    workspaces {
-      name = "torosaba-net"
-    }
+  backend "s3" {
+    bucket                      = "torosaba-net-tfstate"
+    key                         = "terraform.tfstate"
+    region                      = "auto"
+    skip_credentials_validation = true
+    skip_region_validation      = true
+    skip_requesting_account_id  = true
+    skip_metadata_api_check     = true
+    skip_s3_checksum            = true
+    use_path_style              = true
   }
 
   required_providers {
