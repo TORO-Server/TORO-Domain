@@ -98,7 +98,7 @@ resource "cloudflare_record" "minecraft_srv_root" {
 resource "cloudflare_record" "github_pages_challenge" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "_github-pages-challenge-toro-server"
-  content = var.github_pages_challenge_content
+  content = var.gh_pages_challenge_content
   type    = "TXT"
   proxied = false
   ttl     = 1

@@ -4,10 +4,6 @@ variable "cloudflare_api_token" {
   sensitive   = true
 }
 
-variable "cloudflare_zone_id" {
-  description = "Cloudflare Zone ID for torosaba.net"
-  type        = string
-}
 
 variable "cloudflare_account_id" {
   description = "Cloudflare Account ID"
@@ -24,7 +20,7 @@ variable "argotunnel_cname_target" {
   type        = string
 }
 
-variable "github_pages_challenge_content" {
+variable "gh_pages_challenge_content" {
   description = "Content for GitHub Pages challenge TXT record"
   type        = string
 }
