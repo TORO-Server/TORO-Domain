@@ -4,19 +4,18 @@ variable "cloudflare_api_token" {
   sensitive   = true
 }
 
-
 variable "cloudflare_account_id" {
   description = "Cloudflare Account ID"
   type        = string
 }
 
 variable "toropon_ip" {
-  description = "Global IP address for torosaba.net (toropon)"
+  description = "Global IP address for toropon"
   type        = string
 }
 
 variable "argotunnel_cname_target" {
-  description = "CNAME target for Cloudflare Argo Tunnel"
+  description = "CNAME target for Cloudflare Tunnel"
   type        = string
 }
 
