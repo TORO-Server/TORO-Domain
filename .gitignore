@@ -38,6 +38,7 @@ override.tf.json
 # Terraform related
 terraform
 .terraform*
+!.terraform.lock.hcl
 
 # Environment variables
 .env
