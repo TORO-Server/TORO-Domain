@@ -23,6 +23,24 @@ resource "cloudflare_record" "lgb_a" {
   ttl     = 1
 }
 
+resource "cloudflare_record" "doro_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "doro"
+  content = var.toropon_ip
+  type    = "A"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "toto_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "toto"
+  content = var.toropon_ip
+  type    = "A"
+  proxied = false
+  ttl     = 1
+}
+
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "torosaba.net"
@@ -101,6 +119,42 @@ resource "cloudflare_record" "minecraft_srv_lgb" {
     weight   = 100
     port     = 27248
     target   = "lgb.torosaba.net"
+  }
+}
+
+resource "cloudflare_record" "minecraft_srv_doro" {
+  zone_id  = cloudflare_zone.torosaba_net.id
+  name     = "_minecraft._tcp.doro"
+  type     = "SRV"
+  proxied  = false
+  ttl      = 1
+  priority = 50
+  data {
+    service  = "_minecraft"
+    proto    = "_tcp"
+    name     = "doro"
+    priority = 50
+    weight   = 100
+    port     = 27248
+    target   = "doro.torosaba.net"
+  }
+}
+
+resource "cloudflare_record" "minecraft_srv_toto" {
+  zone_id  = cloudflare_zone.torosaba_net.id
+  name     = "_minecraft._tcp.toto"
+  type     = "SRV"
+  proxied  = false
+  ttl      = 1
+  priority = 50
+  data {
+    service  = "_minecraft"
+    proto    = "_tcp"
+    name     = "toto"
+    priority = 50
+    weight   = 100
+    port     = 27248
+    target   = "toto.torosaba.net"
   }
 }
 
