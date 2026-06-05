@@ -9,18 +9,27 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: terraform-production
+  cancel-in-progress: false
+
 jobs:
   apply:
     name: "Terraform Apply"
     runs-on: ubuntu-latest
-    environment: production
     env:
       TF_CLI_ARGS: "-no-color"
+      TF_INPUT: "false"
+      TF_IN_AUTOMATION: "true"
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: true
 
       - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.15.4"
 
       - run: terraform init -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
         env:
