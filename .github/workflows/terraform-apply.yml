@@ -2,34 +2,34 @@ name: "Terraform Apply"
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths-ignore:
+      - ".terraform.lock.hcl"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   apply:
-    name: "Terraform Apply"
     runs-on: ubuntu-latest
-    
+    environment: production
+    env:
+      TF_CLI_ARGS: "-no-color"
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+      - uses: hashicorp/setup-terraform@v4
 
-      - name: Terraform Init
+      - run: terraform init -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          terraform init \
-            -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
 
-      - name: Terraform Apply
+      - uses: ./.github/actions/commit-terraform-lock-file
+
+      - run: terraform apply -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -38,4 +38,3 @@ jobs:
           TF_VAR_toropon_ip: ${{ secrets.TOROPON_IP }}
           TF_VAR_argotunnel_cname_target: ${{ secrets.ARGOTUNNEL_CNAME_TARGET }}
           TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
-        run: terraform apply -auto-approve -no-color
