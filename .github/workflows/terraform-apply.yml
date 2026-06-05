@@ -28,8 +28,6 @@ jobs:
           persist-credentials: true
 
       - uses: hashicorp/setup-terraform@v4
-        with:
-          terraform_version: "1.15.4"
 
       - run: terraform init -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
         env:
