@@ -1,6 +1,12 @@
+locals {
+  zone_name         = "torosaba.net"
+  github_pages_host = "toro-server.github.io"
+  mc_subdomains     = toset(["minuma", "lgb", "doro", "toto"])
+}
+
 resource "cloudflare_zone" "torosaba_net" {
   account_id = var.cloudflare_account_id
-  zone       = "torosaba.net"
+  zone       = local.zone_name
   plan       = "free"
   type       = "full"
 }
@@ -43,7 +49,7 @@ resource "cloudflare_record" "toto_a" {
 
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
-  name    = "torosaba.net"
+  name    = local.zone_name
   content = var.toropon_ip
   type    = "A"
   proxied = false
@@ -71,7 +77,7 @@ resource "cloudflare_record" "pass_api_cname" {
 resource "cloudflare_record" "sound_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "sound"
-  content = "toro-server.github.io"
+  content = local.github_pages_host
   type    = "CNAME"
   proxied = false
   ttl     = 1
@@ -80,81 +86,47 @@ resource "cloudflare_record" "sound_cname" {
 resource "cloudflare_record" "status_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "status"
-  content = "toro-server.github.io"
+  content = local.github_pages_host
   type    = "CNAME"
   proxied = false
   ttl     = 1
 }
 
-resource "cloudflare_record" "minecraft_srv_minuma" {
-  zone_id  = cloudflare_zone.torosaba_net.id
-  name     = "_minecraft._tcp.minuma"
-  type     = "SRV"
-  proxied  = false
-  ttl      = 1
-  priority = 50
-  data {
-    service  = "_minecraft"
-    proto    = "_tcp"
-    name     = "minuma"
-    priority = 50
-    weight   = 100
-    port     = 27248
-    target   = "minuma.torosaba.net"
-  }
+moved {
+  from = cloudflare_record.minecraft_srv_minuma
+  to   = cloudflare_record.minecraft_srv["minuma"]
 }
 
-resource "cloudflare_record" "minecraft_srv_lgb" {
-  zone_id  = cloudflare_zone.torosaba_net.id
-  name     = "_minecraft._tcp.lgb"
-  type     = "SRV"
-  proxied  = false
-  ttl      = 1
-  priority = 50
-  data {
-    service  = "_minecraft"
-    proto    = "_tcp"
-    name     = "lgb"
-    priority = 50
-    weight   = 100
-    port     = 27248
-    target   = "lgb.torosaba.net"
-  }
+moved {
+  from = cloudflare_record.minecraft_srv_lgb
+  to   = cloudflare_record.minecraft_srv["lgb"]
 }
 
-resource "cloudflare_record" "minecraft_srv_doro" {
-  zone_id  = cloudflare_zone.torosaba_net.id
-  name     = "_minecraft._tcp.doro"
-  type     = "SRV"
-  proxied  = false
-  ttl      = 1
-  priority = 50
-  data {
-    service  = "_minecraft"
-    proto    = "_tcp"
-    name     = "doro"
-    priority = 50
-    weight   = 100
-    port     = 27248
-    target   = "doro.torosaba.net"
-  }
+moved {
+  from = cloudflare_record.minecraft_srv_doro
+  to   = cloudflare_record.minecraft_srv["doro"]
 }
 
-resource "cloudflare_record" "minecraft_srv_toto" {
+moved {
+  from = cloudflare_record.minecraft_srv_toto
+  to   = cloudflare_record.minecraft_srv["toto"]
+}
+
+resource "cloudflare_record" "minecraft_srv" {
+  for_each = local.mc_subdomains
   zone_id  = cloudflare_zone.torosaba_net.id
-  name     = "_minecraft._tcp.toto"
+  name     = "_minecraft._tcp.${each.value}"
   type     = "SRV"
   proxied  = false
   ttl      = 1
-  priority = 50
   data {
     service  = "_minecraft"
     proto    = "_tcp"
-    name     = "toto"
+    name     = each.value
     priority = 50
     weight   = 100
     port     = 27248
-    target   = "toto.torosaba.net"
+    target   = "${each.value}.${local.zone_name}"
   }
 }
 
@@ -164,15 +136,14 @@ resource "cloudflare_record" "minecraft_srv_root" {
   type     = "SRV"
   proxied  = false
   ttl      = 1
-  priority = 50
   data {
     service  = "_minecraft"
     proto    = "_tcp"
-    name     = "torosaba.net"
+    name     = local.zone_name
     priority = 50
     weight   = 100
     port     = 27248
-    target   = "torosaba.net"
+    target   = local.zone_name
   }
 }
 
