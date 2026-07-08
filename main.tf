@@ -79,7 +79,7 @@ resource "cloudflare_record" "sound_cname" {
   name    = "sound"
   content = local.github_pages_host
   type    = "CNAME"
-  proxied = false
+  proxied = true
   ttl     = 1
 }
 
@@ -88,7 +88,7 @@ resource "cloudflare_record" "status_cname" {
   name    = "status"
   content = local.github_pages_host
   type    = "CNAME"
-  proxied = false
+  proxied = true
   ttl     = 1
 }
 
@@ -131,11 +131,11 @@ resource "cloudflare_record" "minecraft_srv" {
 }
 
 resource "cloudflare_record" "minecraft_srv_root" {
-  zone_id  = cloudflare_zone.torosaba_net.id
-  name     = "_minecraft._tcp"
-  type     = "SRV"
-  proxied  = false
-  ttl      = 1
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "_minecraft._tcp"
+  type    = "SRV"
+  proxied = false
+  ttl     = 1
   data {
     service  = "_minecraft"
     proto    = "_tcp"
