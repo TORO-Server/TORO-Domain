@@ -79,7 +79,7 @@ resource "cloudflare_record" "sound_cname" {
   name    = "sound"
   content = local.github_pages_host
   type    = "CNAME"
-  proxied = true
+  proxied = false
   ttl     = 1
 }
 
@@ -88,7 +88,7 @@ resource "cloudflare_record" "status_cname" {
   name    = "status"
   content = local.github_pages_host
   type    = "CNAME"
-  proxied = true
+  proxied = false
   ttl     = 1
 }
 
