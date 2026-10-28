@@ -16,6 +16,6 @@ DNS設定は、調べれば誰でも見ることができる情報であるた�
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare のアカウント ID |
 | `R2_ACCESS_KEY_ID` | Cloudflare R2 のアクセスキー ID |
 | `R2_SECRET_ACCESS_KEY` | Cloudflare R2 のシークレットアクセスキー |
-| `TOROPON_IP` | とろぽん のグローバルIPアドレス |
+| `MARUMASA_IP` | サーバー所有者(まるまさ)のグローバルIPアドレス |
 | `ARGOTUNNEL_CNAME_TARGET` | Cloudflare Tunnel 用の CNAME ターゲット |
 | `GH_PAGES_CHALLENGE_CONTENT` | GitHub Pages チャレンジ用の TXT レコード内容 |

@@ -10,8 +10,8 @@ variable "cloudflare_account_id" {
   sensitive   = true
 }
 
-variable "toropon_ip" {
-  description = "Global IP address for toropon"
+variable "marumasa_ip" {
+  description = "Global IP address of the server owner (marumasa)"
   type        = string
   sensitive   = true
 }
