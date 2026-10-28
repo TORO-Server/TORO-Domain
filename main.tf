@@ -14,7 +14,7 @@ resource "cloudflare_zone" "torosaba_net" {
 resource "cloudflare_record" "minuma_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "minuma"
-  content = var.toropon_ip
+  content = var.marumasa_ip
   type    = "A"
   proxied = false
   ttl     = 1
@@ -23,7 +23,7 @@ resource "cloudflare_record" "minuma_a" {
 resource "cloudflare_record" "lgb_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "lgb"
-  content = var.toropon_ip
+  content = var.marumasa_ip
   type    = "A"
   proxied = false
   ttl     = 1
@@ -32,7 +32,7 @@ resource "cloudflare_record" "lgb_a" {
 resource "cloudflare_record" "doro_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "doro"
-  content = var.toropon_ip
+  content = var.marumasa_ip
   type    = "A"
   proxied = false
   ttl     = 1
@@ -41,7 +41,7 @@ resource "cloudflare_record" "doro_a" {
 resource "cloudflare_record" "toto_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "toto"
-  content = var.toropon_ip
+  content = var.marumasa_ip
   type    = "A"
   proxied = false
   ttl     = 1
@@ -50,7 +50,7 @@ resource "cloudflare_record" "toto_a" {
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = local.zone_name
-  content = var.toropon_ip
+  content = var.marumasa_ip
   type    = "A"
   proxied = false
   ttl     = 1
