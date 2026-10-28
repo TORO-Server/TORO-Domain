@@ -73,6 +73,14 @@ resource "cloudflare_record" "pass_api_cname" {
   ttl     = 1
 }
 
+resource "cloudflare_record" "bluemap_cname" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "3d-map"
+  content = var.argotunnel_cname_target
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+}
 resource "cloudflare_record" "sound_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "sound"
