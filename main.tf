@@ -55,6 +55,27 @@ resource "cloudflare_record" "root_a" {
   ttl     = 1
 }
 
+# 公式サイト (TORO-Server/TORO-Website) は GitHub Pages で www に置く。
+# apex は Minecraft の接続先なのでプロキシできず、www への転送は自宅サーバーの 80/443 で行う
+resource "cloudflare_record" "www_cname" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "www"
+  content = local.github_pages_host
+  type    = "CNAME"
+  proxied = false
+  ttl     = 1
+}
+
+# Wiki (TORO-Server/TORO-Wiki-Site) も GitHub Pages
+resource "cloudflare_record" "wiki_cname" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "wiki"
+  content = local.github_pages_host
+  type    = "CNAME"
+  proxied = false
+  ttl     = 1
+}
+
 resource "cloudflare_record" "map_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "map"
