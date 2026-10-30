@@ -105,6 +105,18 @@ resource "cloudflare_record" "bluemap_cname" {
   allow_overwrite = true
 }
 
+# MarumaSign の看板の画像などのアセットサーバー (toro-nginx → toro-map-web)
+resource "cloudflare_record" "assets_cname" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "assets"
+  content = var.argotunnel_cname_target
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+  # Tunnel の公開ホスト名の登録で同じレコードが先に作られていたため、既存のものを引き継ぐ
+  allow_overwrite = true
+}
+
 resource "cloudflare_record" "sound_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "sound"
