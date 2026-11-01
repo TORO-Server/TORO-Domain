@@ -143,3 +143,25 @@ resource "cloudflare_record" "github_pages_challenge" {
   proxied = false
   ttl     = 1
 }
+
+# Auth Worker (認証および共通 API ゲートウェイ)
+resource "cloudflare_record" "auth_cname" {
+  zone_id         = cloudflare_zone.torosaba_net.id
+  name            = "auth"
+  content         = "toro-auth.marumasa.workers.dev"
+  type            = "CNAME"
+  proxied         = true
+  ttl             = 1
+  allow_overwrite = true
+}
+
+# MCP Worker (AI コネクタ用エンドポイント)
+resource "cloudflare_record" "mcp_cname" {
+  zone_id         = cloudflare_zone.torosaba_net.id
+  name            = "mcp"
+  content         = "toro-auth.marumasa.workers.dev"
+  type            = "CNAME"
+  proxied         = true
+  ttl             = 1
+  allow_overwrite = true
+}
