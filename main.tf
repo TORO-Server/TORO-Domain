@@ -66,7 +66,7 @@ resource "cloudflare_record" "www_cname" {
   ttl     = 1
 }
 
-# Wiki (TORO-Server/TORO-Wiki-Site) も GitHub Pages
+# Wiki (TORO-Server/TORO-Wiki) も GitHub Pages
 resource "cloudflare_record" "wiki_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "wiki"
