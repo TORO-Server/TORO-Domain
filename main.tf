@@ -176,3 +176,23 @@ resource "cloudflare_record" "api_cname" {
   ttl             = 1
   allow_overwrite = true
 }
+
+# なりすましメール防止のための SPF レコード (メール送信不許可)
+resource "cloudflare_record" "spf_record" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "\"v=spf1 -all\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 1
+}
+
+# なりすましメール防止のための DMARC レコード (不正メール完全拒絶)
+resource "cloudflare_record" "dmarc_record" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "_dmarc"
+  content = "\"v=DMARC1; p=reject; sp=reject; aspf=s; adkim=s;\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 1
+}
