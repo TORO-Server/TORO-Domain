@@ -46,80 +46,17 @@ resource "cloudflare_record" "toto_a" {
   ttl     = 1
 }
 
-# 公式サイト (TORO-Server/TORO-Website: GitHub Pages) の apex から www へのリダイレクト用 A / AAAA レコード
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = local.zone_name
-  content = "185.199.108.153"
+  content = var.marumasa_ip
   type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_a_2" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "185.199.109.153"
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_a_3" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "185.199.110.153"
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_a_4" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "185.199.111.153"
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_aaaa_1" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "2606:50c0:8000::153"
-  type    = "AAAA"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_aaaa_2" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "2606:50c0:8001::153"
-  type    = "AAAA"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_aaaa_3" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "2606:50c0:8002::153"
-  type    = "AAAA"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_record" "root_aaaa_4" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = "2606:50c0:8003::153"
-  type    = "AAAA"
   proxied = false
   ttl     = 1
 }
 
 # 公式サイト (TORO-Server/TORO-Website) は GitHub Pages で www に置く。
+# apex は Minecraft の接続先なのでプロキシできず、www への転送は自宅サーバーの 80/443 で行う
 resource "cloudflare_record" "www_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "www"
