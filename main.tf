@@ -49,14 +49,13 @@ resource "cloudflare_record" "toto_a" {
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = local.zone_name
-  content = var.marumasa_ip
+  content = "192.0.2.1"
   type    = "A"
-  proxied = false
+  proxied = true
   ttl     = 1
 }
 
 # 公式サイト (TORO-Server/TORO-Website) は GitHub Pages で www に置く。
-# apex は Minecraft の接続先なのでプロキシできず、www への転送は自宅サーバーの 80/443 で行う
 resource "cloudflare_record" "www_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "www"
@@ -64,6 +63,26 @@ resource "cloudflare_record" "www_cname" {
   type    = "CNAME"
   proxied = false
   ttl     = 1
+}
+
+resource "cloudflare_workers_script" "apex_redirect" {
+  account_id = var.cloudflare_account_id
+  name       = "toro-apex-redirect"
+  content    = <<-EOT
+    addEventListener('fetch', event => {
+      const url = new URL(event.request.url)
+      event.respondWith(Response.redirect(
+        'https://www.${local.zone_name}' + url.pathname + url.search,
+        301
+      ))
+    })
+  EOT
+}
+
+resource "cloudflare_worker_route" "apex_redirect" {
+  zone_id     = cloudflare_zone.torosaba_net.id
+  pattern     = "${local.zone_name}/*"
+  script_name = cloudflare_workers_script.apex_redirect.name
 }
 
 # Wiki (TORO-Server/TORO-Wiki) も GitHub Pages
