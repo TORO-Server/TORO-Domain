@@ -46,12 +46,76 @@ resource "cloudflare_record" "toto_a" {
   ttl     = 1
 }
 
+# 公式サイト (TORO-Server/TORO-Website: GitHub Pages) の apex から www へのリダイレクト用 A / AAAA レコード
 resource "cloudflare_record" "root_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = local.zone_name
-  content = "192.0.2.1"
+  content = "185.199.108.153"
   type    = "A"
-  proxied = true
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_a_2" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "185.199.109.153"
+  type    = "A"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_a_3" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "185.199.110.153"
+  type    = "A"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_a_4" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "185.199.111.153"
+  type    = "A"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_aaaa_1" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "2606:50c0:8000::153"
+  type    = "AAAA"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_aaaa_2" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "2606:50c0:8001::153"
+  type    = "AAAA"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_aaaa_3" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "2606:50c0:8002::153"
+  type    = "AAAA"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_record" "root_aaaa_4" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = "2606:50c0:8003::153"
+  type    = "AAAA"
+  proxied = false
   ttl     = 1
 }
 
@@ -63,26 +127,6 @@ resource "cloudflare_record" "www_cname" {
   type    = "CNAME"
   proxied = false
   ttl     = 1
-}
-
-resource "cloudflare_workers_script" "apex_redirect" {
-  account_id = var.cloudflare_account_id
-  name       = "toro-apex-redirect"
-  content    = <<-EOT
-    addEventListener('fetch', event => {
-      const url = new URL(event.request.url)
-      event.respondWith(Response.redirect(
-        'https://www.${local.zone_name}' + url.pathname + url.search,
-        301
-      ))
-    })
-  EOT
-}
-
-resource "cloudflare_worker_route" "apex_redirect" {
-  zone_id     = cloudflare_zone.torosaba_net.id
-  pattern     = "${local.zone_name}/*"
-  script_name = cloudflare_workers_script.apex_redirect.name
 }
 
 # Wiki (TORO-Server/TORO-Wiki) も GitHub Pages
