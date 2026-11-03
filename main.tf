@@ -165,3 +165,14 @@ resource "cloudflare_record" "mcp_cname" {
   ttl             = 1
   allow_overwrite = true
 }
+
+# REST API (toro-auth。Cloudflare Tunnel 経由で自前のサーバーへ)
+resource "cloudflare_record" "api_cname" {
+  zone_id         = cloudflare_zone.torosaba_net.id
+  name            = "api"
+  content         = var.argotunnel_cname_target
+  type            = "CNAME"
+  proxied         = true
+  ttl             = 1
+  allow_overwrite = true
+}
