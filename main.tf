@@ -144,22 +144,22 @@ resource "cloudflare_record" "github_pages_challenge" {
   ttl     = 1
 }
 
-# Auth Worker (認証および共通 API ゲートウェイ)
+# 共通認証 (toro-auth。Cloudflare Tunnel 経由で自前のサーバーへ)
 resource "cloudflare_record" "auth_cname" {
   zone_id         = cloudflare_zone.torosaba_net.id
   name            = "auth"
-  content         = "toro-auth.marumasa.workers.dev"
+  content         = var.argotunnel_cname_target
   type            = "CNAME"
   proxied         = true
   ttl             = 1
   allow_overwrite = true
 }
 
-# MCP Worker (AI コネクタ用エンドポイント)
+# AI コネクタ (toro-auth。Cloudflare Tunnel 経由で自前のサーバーへ)
 resource "cloudflare_record" "mcp_cname" {
   zone_id         = cloudflare_zone.torosaba_net.id
   name            = "mcp"
-  content         = "toro-auth.marumasa.workers.dev"
+  content         = var.argotunnel_cname_target
   type            = "CNAME"
   proxied         = true
   ttl             = 1
