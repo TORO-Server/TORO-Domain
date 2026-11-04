@@ -105,7 +105,7 @@ resource "cloudflare_record" "bluemap_cname" {
   allow_overwrite = true
 }
 
-# MarumaSign の看板の画像などのアセットサーバー (toro-nginx → toro-map-web)
+# MarumaSign の看板の画像などのアセットサーバー (toro-edge → toro-map-web)
 resource "cloudflare_record" "assets_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "assets"
