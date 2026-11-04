@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.16"
+
   backend "s3" {
     bucket                      = "torosaba-net-tfstate"
     key                         = "terraform.tfstate"

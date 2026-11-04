@@ -1,13 +1,13 @@
 name: "Terraform Apply"
 
+# 認証情報を持つのは main で動くこのジョブだけ。
+# 必須レビュアーと secrets の置き場所は、GitHub の Environment (production) で設定する
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - ".terraform.lock.hcl"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: terraform-production
@@ -16,26 +16,30 @@ concurrency:
 jobs:
   apply:
     name: "Terraform Apply"
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: production
     env:
       TF_CLI_ARGS: "-no-color"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          persist-credentials: true
+          persist-credentials: false
 
-      - uses: hashicorp/setup-terraform@v4
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.17.1
+          terraform_wrapper: false
 
-      - run: terraform init -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
+      # ロックファイルは PR で更新する (Dependabot)。ここでは書き換えない
+      - run: terraform init -lockfile=readonly -backend-config="endpoints={s3=\"https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com\"}"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - uses: ./.github/actions/commit-terraform-lock-file
 
       - run: terraform apply -auto-approve
         env:
