@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # プロバイダーとロックファイルは PR で上げる
+  - package-ecosystem: terraform
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

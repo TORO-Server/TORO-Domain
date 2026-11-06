@@ -6,7 +6,14 @@ Cloudflare を利用して `torosaba.net` ドメインの DNS レコードを管
 
 DNS設定は、調べれば誰でも見ることができる情報であるため公開しています。
 
-なお、悪用のリスクを考慮し、IPアドレスなどはソースコード内に直接記述せず変数で管理しています。
+IPアドレスなどをソースコード内に直接記述せず変数で管理しているのは、値を変えやすくするためです。DNS に載る値は誰でも調べられるので、変数にしても秘密にはなりません。
+
+## 認証情報の扱い
+
+- プルリクエストの Terraform Plan と Terraform Validate には認証情報を渡しません。Plan はダミーの値で構成だけを計画します。state や実際のレコードとの差分は見ません。
+- 認証情報を使うのは、`main` へのプッシュで動く Terraform Apply だけです。ジョブは GitHub の Environment `production` で動きます。
+- `production` に必須レビュアーを設定し、下の secrets をリポジトリから `production` に移すと、ブランチのワークフローからは読めなくなります。
+- プロバイダーのロックファイルは Dependabot などの PR で更新します。Apply は書き換えません。
 
 ## GitHub Secrets の設定
 
