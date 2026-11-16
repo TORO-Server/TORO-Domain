@@ -77,12 +77,13 @@ resource "cloudflare_dns_record" "wiki_cname" {
   ttl     = 1
 }
 
+# 地図 (TORO-Server/TORO-WebMap) の静的な画面は GitHub Pages。API は api.torosaba.net/map/v1 (Tunnel → toro-edge)
 resource "cloudflare_dns_record" "map_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "map"
-  content = var.argotunnel_cname_target
+  content = local.github_pages_host
   type    = "CNAME"
-  proxied = true
+  proxied = false
   ttl     = 1
 }
 
