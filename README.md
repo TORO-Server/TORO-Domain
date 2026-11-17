@@ -1,28 +1,34 @@
 # TORO-Domain
 
-Cloudflare を利用して `torosaba.net` ドメインの DNS レコードを管理するための Terraform
+TORO のドメインの DNS (名前から接続先を引く表) の記録を、Cloudflare 上で管理するための Terraform (設定をファイルに書いて自動で反映する道具) の設定です。
 
-## DNS設定の公開について
+## DNS の設定を公開している理由
 
-DNS設定は、調べれば誰でも見ることができる情報であるため公開しています。
+DNS の設定は、調べれば誰でも見られる情報なので公開しています。
 
-IPアドレスなどをソースコード内に直接記述せず変数で管理しているのは、値を変えやすくするためです。DNS に載る値は誰でも調べられるので、変数にしても秘密にはなりません。
+IP アドレスなどをファイルに直接書かず変数で受け取るのは、値を変えやすくするためです。DNS に載る値は誰でも調べられるので、変数にしても秘密にはなりません。値は GitHub の秘密の設定 (下の表) に置き、このリポジトリには書きません。
 
-## 認証情報の扱い
+## 自動検査と反映
 
-- プルリクエストの Terraform Plan と Terraform Validate には認証情報を渡しません。Plan はダミーの値で構成だけを計画します。state や実際のレコードとの差分は見ません。
-- 認証情報を使うのは、`main` へのプッシュで動く Terraform Apply だけです。ジョブは GitHub の Environment `production` で動きます。
-- `production` に必須レビュアーを設定し、下の secrets をリポジトリから `production` に移すと、ブランチのワークフローからは読めなくなります。
-- プロバイダーのロックファイルは Dependabot などの PR で更新します。Apply は書き換えません。
+- 変更の提案 (プルリクエスト) では、Terraform の検査 (`validate`) と計画 (`plan`) が動きます。ここには認証情報を渡しません。計画はダミーの値で、構成だけを確かめます。実際の記録との差は見ません。
+- 認証情報を使うのは、`main` へ反映されたときに動く `terraform apply` だけです。この処理は GitHub の環境 `production` で動きます。
+- `production` に必須の確認者を設定し、下の秘密の設定をリポジトリ全体から `production` に移すと、別のブランチの処理からは読めなくなります。
+- Terraform の部品 (プロバイダー) のバージョンを固定するファイルは、Dependabot などの変更の提案で更新します。反映の処理は書き換えません。
 
-## GitHub Secrets の設定
+処理の中身の正本は [.github/workflows/](.github/workflows/) です。
 
-| シークレット名 | 説明 |
+## GitHub の秘密の設定
+
+| 名前 | 説明 |
 | :--- | :--- |
-| `CLOUDFLARE_API_TOKEN` | Cloudflare の API トークン（DNS 編集権限が必要） |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare の API トークン (DNS を編集できる権限が必要) |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare のアカウント ID |
-| `R2_ACCESS_KEY_ID` | Cloudflare R2 のアクセスキー ID |
+| `R2_ACCESS_KEY_ID` | Cloudflare R2 (Terraform の状態の保存先) のアクセスキー ID |
 | `R2_SECRET_ACCESS_KEY` | Cloudflare R2 のシークレットアクセスキー |
-| `MARUMASA_IP` | サーバー所有者(まるまさ)のグローバルIPアドレス |
-| `ARGOTUNNEL_CNAME_TARGET` | Cloudflare Tunnel 用の CNAME ターゲット |
-| `GH_PAGES_CHALLENGE_CONTENT` | GitHub Pages チャレンジ用の TXT レコード内容 |
+| `MARUMASA_IP` | サーバーのグローバル IP アドレス |
+| `ARGOTUNNEL_CNAME_TARGET` | Cloudflare Tunnel 用の CNAME の接続先 |
+| `GH_PAGES_CHALLENGE_CONTENT` | GitHub Pages の所有確認用の TXT 記録の内容 |
+
+## 関連文書
+
+- 文章の書き方: [WRITING-STYLE.md](https://github.com/TORO-Server/TORO-Website/blob/main/docs/WRITING-STYLE.md)
