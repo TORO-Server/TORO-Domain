@@ -87,17 +87,6 @@ resource "cloudflare_dns_record" "map_cname" {
   ttl     = 1
 }
 
-# 3D 地図 (TORO-Server/TORO-3D-WebMap) の静的な画面は GitHub Pages。API は api.torosaba.net/map3d/v1。
-# 既存の 3d-map (bluemap_cname) は並行期間のあいだ従来のまま (Tunnel)
-resource "cloudflare_dns_record" "map3d_cname" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = "3d"
-  content = local.github_pages_host
-  type    = "CNAME"
-  proxied = false
-  ttl     = 1
-}
-
 resource "cloudflare_dns_record" "pass_api_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "pass-api"
@@ -107,14 +96,15 @@ resource "cloudflare_dns_record" "pass_api_cname" {
   ttl     = 1
 }
 
+# 3D 地図 (TORO-Server/TORO-3D-WebMap) の静的な画面は GitHub Pages。公開のホスト名は 3d-map だけ (3d という名前は使わない)。
+# API は api.torosaba.net/map3d/v1。以前は Tunnel (従来の BlueMap の画面) に向けていた。戻すときはこの変更を revert する
 resource "cloudflare_dns_record" "bluemap_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "3d-map"
-  content = var.argotunnel_cname_target
+  content = local.github_pages_host
   type    = "CNAME"
-  proxied = true
+  proxied = false
   ttl     = 1
-  # Tunnel の公開ホスト名の登録で同じレコードが先に作られていたため、既存のものを引き継ぐ
 }
 
 # MarumaSign の看板の画像などのアセットサーバー (toro-edge → toro-map-web)
