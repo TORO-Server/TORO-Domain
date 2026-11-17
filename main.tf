@@ -87,6 +87,17 @@ resource "cloudflare_dns_record" "map_cname" {
   ttl     = 1
 }
 
+# 3D 地図 (TORO-Server/TORO-3D-WebMap) の静的な画面は GitHub Pages。API は api.torosaba.net/map3d/v1。
+# 既存の 3d-map (bluemap_cname) は並行期間のあいだ従来のまま (Tunnel)
+resource "cloudflare_dns_record" "map3d_cname" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "3d"
+  content = local.github_pages_host
+  type    = "CNAME"
+  proxied = false
+  ttl     = 1
+}
+
 resource "cloudflare_dns_record" "pass_api_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "pass-api"
