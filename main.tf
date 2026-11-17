@@ -77,7 +77,7 @@ resource "cloudflare_dns_record" "wiki_cname" {
   ttl     = 1
 }
 
-# 地図 (TORO-Server/TORO-WebMap) の静的な画面は GitHub Pages。API は api.torosaba.net/map/v1 (Tunnel → toro-edge)
+# 地図 (TORO-Server/TORO-WebMap) の静的な画面は GitHub Pages。API は api.torosaba.net/map/v1 (Tunnel → 入り口のプロキシ)
 resource "cloudflare_dns_record" "map_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "map"
@@ -107,7 +107,7 @@ resource "cloudflare_dns_record" "bluemap_cname" {
   ttl     = 1
 }
 
-# MarumaSign の看板の画像などのアセットサーバー (toro-edge → toro-map-web)
+# MarumaSign の看板の画像などのアセットサーバー (入り口のプロキシ → 地図サーバー)
 resource "cloudflare_dns_record" "assets_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "assets"
@@ -145,7 +145,7 @@ resource "cloudflare_dns_record" "github_pages_challenge" {
   ttl     = 1
 }
 
-# 共通認証 (toro-auth。Cloudflare Tunnel 経由で自前のサーバーへ)
+# 共通認証 (認証サービス。Cloudflare Tunnel 経由で自前のサーバーへ)
 resource "cloudflare_dns_record" "auth_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "auth"
@@ -155,7 +155,7 @@ resource "cloudflare_dns_record" "auth_cname" {
   ttl     = 1
 }
 
-# AI コネクタ (toro-auth。Cloudflare Tunnel 経由で自前のサーバーへ)
+# AI コネクタ (認証サービス。Cloudflare Tunnel 経由で自前のサーバーへ)
 resource "cloudflare_dns_record" "mcp_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "mcp"
@@ -165,7 +165,7 @@ resource "cloudflare_dns_record" "mcp_cname" {
   ttl     = 1
 }
 
-# REST API (toro-auth。Cloudflare Tunnel 経由で自前のサーバーへ)
+# REST API (認証サービス。Cloudflare Tunnel 経由で自前のサーバーへ)
 resource "cloudflare_dns_record" "api_cname" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "api"
