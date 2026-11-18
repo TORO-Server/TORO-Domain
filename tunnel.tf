@@ -1,5 +1,5 @@
 # torosaba.net 用の Cloudflare Tunnel 本体と、公開ホスト名の振り分け (ingress)。
-# 以前はダッシュボード／API だけで管理していたものを、実際の設定を変えずに取り込んだ。
+# 以前はダッシュボード／API だけで管理していたものを取り込む。取り込みと同時に、全ホスト名の転送先を toro-edge へ統一する (経路の振り分けは toro-edge 側が持つ)。
 # 転送先 (内部のサービス名) は公開しない方針なので、変数 tunnel_origin_services (GitHub の秘密の設定) で受け取る。
 # 取り込み (import) の指定は imports.tf にある。
 
@@ -19,7 +19,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "torosaba_net" {
   }
 }
 
-# 上から順に評価される。api.torosaba.net の 3 件はパス条件で分かれている (条件なしを最後に置く)
+# 上から順に評価される。全ホスト名が同じ転送先 (edge) を向く。api.torosaba.net のパス分割は無い
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "torosaba_net" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.torosaba_net.id
@@ -28,12 +28,8 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "torosaba_net" {
     ingress = [
       {
         hostname       = "pass-api.${local.zone_name}"
-        service        = var.tunnel_origin_services.pass_api
+        service        = var.tunnel_origin_services.edge
         origin_request = {}
-      },
-      {
-        hostname = "3d-map.${local.zone_name}"
-        service  = var.tunnel_origin_services.edge
       },
       {
         hostname = "assets.${local.zone_name}"
@@ -41,25 +37,15 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "torosaba_net" {
       },
       {
         hostname = "auth.${local.zone_name}"
-        service  = var.tunnel_origin_services.auth
+        service  = var.tunnel_origin_services.edge
       },
       {
         hostname = "mcp.${local.zone_name}"
-        service  = var.tunnel_origin_services.mcp
-      },
-      {
-        hostname = "api.${local.zone_name}"
-        path     = "^/map/"
         service  = var.tunnel_origin_services.edge
       },
       {
         hostname = "api.${local.zone_name}"
-        path     = "^/map3d/"
         service  = var.tunnel_origin_services.edge
-      },
-      {
-        hostname = "api.${local.zone_name}"
-        service  = var.tunnel_origin_services.api
       },
       {
         service        = "http_status:404"

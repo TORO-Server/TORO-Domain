@@ -59,13 +59,15 @@ jobs:
           TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
           TF_VAR_tunnel_origin_services: ${{ secrets.TUNNEL_ORIGIN_SERVICES }}
 
-      # 一時的な安全柵 (トンネルの取り込み専用): 取り込み以外の変更 (作成、更新、削除) が 1 件でもあれば、適用せずに止める
-      - name: Guard (import only, no changes)
+      # 一時的な安全柵 (トンネルの取り込み専用): 許す変更は「トンネル構成 (ingress) の更新」だけ。
+      # それ以外の作成、更新、削除が 1 件でもあれば、適用せずに止める。取り込みは 2 件 (トンネル本体と構成) ちょうどであること
+      - name: Guard (import + tunnel config update only)
         run: |
           terraform show -json tfplan > plan.json
           echo "resource_changes=$(jq '.resource_changes|length' plan.json) non_noop=$(jq '[.resource_changes[]|select(.change.actions!=["no-op"])]|length' plan.json) importing=$(jq '[.resource_changes[]|select(.change.importing!=null)]|length' plan.json)"
-          test "$(jq '[.resource_changes[]|select(.change.actions!=["no-op"])]|length' plan.json)" = "0" || { echo "plan contains changes; stop"; exit 1; }
-
+          test "$(jq '[.resource_changes[]|select(.change.importing!=null)]|length' plan.json)" = "2" || { echo "expected exactly 2 imports; stop"; exit 1; }
+          test "$(jq '[.resource_changes[]|select(.change.actions!=["no-op"] and .address!="cloudflare_zero_trust_tunnel_cloudflared_config.torosaba_net")]|length' plan.json)" = "0" || { echo "plan contains changes other than the tunnel config; stop"; exit 1; }
+          test "$(jq '[.resource_changes[]|select(.address=="cloudflare_zero_trust_tunnel_cloudflared_config.torosaba_net" and (.change.actions==["create"] or .change.actions==["delete"] or (.change.actions|index("delete"))))]|length' plan.json)" = "0" || { echo "tunnel config would be created or deleted; stop"; exit 1; }
       - run: terraform apply tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}

@@ -23,7 +23,7 @@ jobs:
       TF_VAR_marumasa_ip: "192.0.2.1"
       TF_VAR_argotunnel_cname_target: "tunnel.example.invalid"
       TF_VAR_gh_pages_challenge_content: "placeholder"
-      TF_VAR_tunnel_origin_services: '{"pass_api":"http://a.invalid:1","edge":"http://b.invalid:1","auth":"http://c.invalid:1","mcp":"http://d.invalid:1","api":"http://e.invalid:1"}'
+      TF_VAR_tunnel_origin_services: '{"edge":"http://b.invalid:1"}'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
