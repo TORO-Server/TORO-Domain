@@ -64,7 +64,8 @@ jobs:
       - name: Guard (import + tunnel config update only)
         run: |
           terraform show -json tfplan > plan.json
-          bash .github/scripts/tunnel-guard.sh plan.json      - run: terraform apply tfplan
+          bash .github/scripts/tunnel-guard.sh plan.json
+      - run: terraform apply tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
