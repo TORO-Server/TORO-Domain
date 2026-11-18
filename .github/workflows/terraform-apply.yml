@@ -59,12 +59,6 @@ jobs:
           TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
           TF_VAR_tunnel_origin_services: ${{ secrets.TUNNEL_ORIGIN_SERVICES }}
 
-      # 一時的な安全柵 (トンネルの取り込み専用): 許す変更は「トンネル構成 (ingress) の更新」と、
-      # 「トンネル本体の更新のうち差分が account_id だけのもの」。それ以外の作成、更新、削除が 1 件でもあれば、適用せずに止める。取り込みは 2 件ちょうど
-      - name: Guard (import + tunnel config update only)
-        run: |
-          terraform show -json tfplan > plan.json
-          bash .github/scripts/tunnel-guard.sh plan.json
       - run: terraform apply tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
