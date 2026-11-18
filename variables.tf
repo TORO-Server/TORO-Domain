@@ -27,3 +27,15 @@ variable "gh_pages_challenge_content" {
   type        = string
   sensitive   = true
 }
+
+variable "tunnel_origin_services" {
+  description = "Origin service URLs (internal addresses) that the torosaba.net Tunnel forwards to"
+  type = object({
+    pass_api = string
+    edge     = string
+    auth     = string
+    mcp      = string
+    api      = string
+  })
+  sensitive = true
+}

@@ -42,7 +42,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      - run: terraform apply -auto-approve
+      # トンネルの識別子は秘密の設定 (ARGOTUNNEL_CNAME_TARGET) の一部。ログに出ても伏せ字にする
+      - name: Mask the tunnel id derived from the secret
+        run: echo "::add-mask::${ARGOTUNNEL_CNAME_TARGET%.cfargotunnel.com}"
+        env:
+          ARGOTUNNEL_CNAME_TARGET: ${{ secrets.ARGOTUNNEL_CNAME_TARGET }}
+
+      - run: terraform plan -out=tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -51,3 +57,22 @@ jobs:
           TF_VAR_marumasa_ip: ${{ secrets.MARUMASA_IP }}
           TF_VAR_argotunnel_cname_target: ${{ secrets.ARGOTUNNEL_CNAME_TARGET }}
           TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
+          TF_VAR_tunnel_origin_services: ${{ secrets.TUNNEL_ORIGIN_SERVICES }}
+
+      # 一時的な安全柵 (トンネルの取り込み専用): 取り込み以外の変更 (作成、更新、削除) が 1 件でもあれば、適用せずに止める
+      - name: Guard (import only, no changes)
+        run: |
+          terraform show -json tfplan > plan.json
+          echo "resource_changes=$(jq '.resource_changes|length' plan.json) non_noop=$(jq '[.resource_changes[]|select(.change.actions!=["no-op"])]|length' plan.json) importing=$(jq '[.resource_changes[]|select(.change.importing!=null)]|length' plan.json)"
+          test "$(jq '[.resource_changes[]|select(.change.actions!=["no-op"])]|length' plan.json)" = "0" || { echo "plan contains changes; stop"; exit 1; }
+
+      - run: terraform apply tfplan
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TF_VAR_marumasa_ip: ${{ secrets.MARUMASA_IP }}
+          TF_VAR_argotunnel_cname_target: ${{ secrets.ARGOTUNNEL_CNAME_TARGET }}
+          TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
+          TF_VAR_tunnel_origin_services: ${{ secrets.TUNNEL_ORIGIN_SERVICES }}
