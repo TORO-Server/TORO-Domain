@@ -23,6 +23,7 @@ jobs:
       TF_VAR_marumasa_ip: "192.0.2.1"
       TF_VAR_argotunnel_cname_target: "tunnel.example.invalid"
       TF_VAR_gh_pages_challenge_content: "placeholder"
+      TF_VAR_tunnel_origin_services: '{"pass_api":"http://a.invalid:1","edge":"http://b.invalid:1","auth":"http://c.invalid:1","mcp":"http://d.invalid:1","api":"http://e.invalid:1"}'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -33,6 +34,10 @@ jobs:
         with:
           terraform_version: 1.17.1
           terraform_wrapper: false
+
+      # 取り込み (imports.tf) は実際の Cloudflare を読むので、認証情報のないこの計画では外す
+      - name: Drop import blocks (they need real credentials)
+        run: rm -f imports.tf
 
       - name: Use a local backend for the plan
         run: printf 'terraform {\n  backend "local" {}\n}\n' > ci_override.tf
