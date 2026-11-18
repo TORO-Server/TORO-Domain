@@ -28,3 +28,4 @@ IP アドレスなどをファイルに直接書かず変数で受け取るの�
 | `MARUMASA_IP` | サーバーのグローバル IP アドレス |
 | `ARGOTUNNEL_CNAME_TARGET` | Cloudflare Tunnel 用の CNAME (別の名前への案内を示す DNS の記録) の接続先 |
 | `GH_PAGES_CHALLENGE_CONTENT` | GitHub Pages の所有確認用の TXT (文字列を載せる DNS の記録) 記録の内容 |
+| `TUNNEL_ORIGIN_SERVICES` | Cloudflare Tunnel の転送先 (内部のサービスのアドレス) を JSON で書いたもの。形は `{"edge":"http://ホスト名:ポート"}`。全ホスト名がこの 1 つへ向く。Terraform の変数 `tunnel_origin_services` に渡る |

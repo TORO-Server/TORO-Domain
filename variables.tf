@@ -27,3 +27,11 @@ variable "gh_pages_challenge_content" {
   type        = string
   sensitive   = true
 }
+
+variable "tunnel_origin_services" {
+  description = "Origin service URL (internal address) that the torosaba.net Tunnel forwards every hostname to"
+  type = object({
+    edge = string
+  })
+  sensitive = true
+}
