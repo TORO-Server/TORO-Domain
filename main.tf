@@ -272,31 +272,3 @@ moved {
   from = cloudflare_record.dmarc_record
   to   = cloudflare_dns_record.dmarc_record
 }
-
-# HSTS (段階導入の第 1 段)。auth、api、mcp だけに付ける (Cloudflare で終端するホスト名のうち、ブラウザから直接使うもの)。
-# max-age は 300 秒から始める。includeSubDomains と preload は付けない (同じゾーンに TLS の無い minuma、GitHub Pages、apex の別運用のホストがあるため)。
-# 安定を確認してから max-age を延ばす (最終は 6 か月以上を目安)。戻すときはこのリソースを revert する (ブラウザには max-age の間だけ残る)
-resource "cloudflare_ruleset" "hsts" {
-  zone_id     = cloudflare_zone.torosaba_net.id
-  name        = "hsts"
-  description = "HSTS for auth, api, mcp"
-  kind        = "zone"
-  phase       = "http_response_headers_transform"
-
-  rules = [
-    {
-      action      = "rewrite"
-      description = "Strict-Transport-Security for auth, api, mcp"
-      enabled     = true
-      expression  = "(http.host in {\"auth.${local.zone_name}\" \"api.${local.zone_name}\" \"mcp.${local.zone_name}\"})"
-      action_parameters = {
-        headers = {
-          "Strict-Transport-Security" = {
-            operation = "set"
-            value     = "max-age=300"
-          }
-        }
-      }
-    }
-  ]
-}
