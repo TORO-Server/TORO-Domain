@@ -272,30 +272,3 @@ moved {
   from = cloudflare_record.dmarc_record
   to   = cloudflare_dns_record.dmarc_record
 }
-
-# auth のレート制限 (F-05 c1)。/oauth/register、/oauth/token、/login だけが対象で、同じ接続元 (と同じエッジ) から 10 秒に 20 回を超えると 10 秒間ブロックする。
-# Free プランの規則は 1 つだけで、period は 10 秒、mitigation_timeout は 10 秒、characteristics は ["cf.colo.id", "ip.src"] に限られる。
-# Cloudflare を通らない内部の経路 (同じネットワークのコンテナから toro-auth へ直接) には効かない (アプリ側の制限 (c2) の要否は別に判断する)。
-# 戻すときはこのリソースを revert する
-resource "cloudflare_ruleset" "auth_rate_limit" {
-  zone_id     = cloudflare_zone.torosaba_net.id
-  name        = "auth-rate-limit"
-  description = "Rate limit for auth /oauth/register, /oauth/token, /login"
-  kind        = "zone"
-  phase       = "http_ratelimit"
-
-  rules = [
-    {
-      action      = "block"
-      description = "auth: 10 秒に 20 回を超えたら 10 秒ブロック"
-      enabled     = true
-      expression  = "(http.host eq \"auth.${local.zone_name}\" and http.request.uri.path in {\"/oauth/register\" \"/oauth/token\" \"/login\"})"
-      ratelimit = {
-        characteristics     = ["cf.colo.id", "ip.src"]
-        period              = 10
-        requests_per_period = 20
-        mitigation_timeout  = 10
-      }
-    }
-  ]
-}
