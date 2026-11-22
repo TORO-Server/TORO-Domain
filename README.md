@@ -26,6 +26,7 @@ IP アドレスなどをファイルに直接書かず変数で受け取るの�
 | `R2_ACCESS_KEY_ID` | Cloudflare R2 (Terraform の状態の保存先) のアクセスキー ID |
 | `R2_SECRET_ACCESS_KEY` | Cloudflare R2 のシークレットアクセスキー |
 | `MARUMASA_IP` | サーバーのグローバル IP アドレス |
+| `MARUMASA_IPV6` | サーバーのグローバル IPv6 アドレス (AAAA 初回作成用。以後の変更は `ignore_changes = [content]`) |
 | `ARGOTUNNEL_CNAME_TARGET` | Cloudflare Tunnel 用の CNAME (別の名前への案内を示す DNS の記録) の接続先 |
 | `GH_PAGES_CHALLENGE_CONTENT` | GitHub Pages の所有確認用の TXT (文字列を載せる DNS の記録) 記録の内容 |
 | `TUNNEL_ORIGIN_SERVICES` | Cloudflare Tunnel の転送先 (内部のサービスのアドレス) を JSON で書いたもの。形は `{"edge":"http://ホスト名:ポート"}`。全ホスト名がこの 1 つへ向く。Terraform の変数 `tunnel_origin_services` に渡る |

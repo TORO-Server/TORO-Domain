@@ -16,6 +16,12 @@ variable "marumasa_ip" {
   sensitive   = true
 }
 
+variable "marumasa_ipv6" {
+  description = "Global IPv6 address of the server owner (marumasa)"
+  type        = string
+  sensitive   = true
+}
+
 variable "argotunnel_cname_target" {
   description = "CNAME target for Cloudflare Tunnel"
   type        = string
