@@ -56,6 +56,73 @@ resource "cloudflare_dns_record" "root_a" {
   ttl     = 1
 }
 
+# ゲーム入口の AAAA。SLAAC でアドレスが変わり得るため content はホスト側の同期スクリプトが更新し、
+# Terraform はレコードの存在と TTL / proxied のみを管理する
+resource "cloudflare_dns_record" "minuma_aaaa" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "minuma"
+  content = var.marumasa_ipv6
+  type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "lgb_aaaa" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "lgb"
+  content = var.marumasa_ipv6
+  type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "doro_aaaa" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "doro"
+  content = var.marumasa_ipv6
+  type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "toto_aaaa" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "toto"
+  content = var.marumasa_ipv6
+  type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "root_aaaa" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = var.marumasa_ipv6
+  type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 # 公式サイト (TORO-Server/TORO-Website) は GitHub Pages で www に置く。
 # apex は Minecraft の接続先なのでプロキシできず、www への転送は自宅サーバーの 80/443 で行う
 resource "cloudflare_dns_record" "www_cname" {
