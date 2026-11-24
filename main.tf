@@ -262,6 +262,16 @@ resource "cloudflare_dns_record" "dmarc_record" {
   ttl     = 1
 }
 
+# Google Search Console ドメインプロパティ所有権確認用 TXT レコード
+resource "cloudflare_dns_record" "google_site_verification" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = var.gsc_site_verification_txt
+  type    = "TXT"
+  proxied = false
+  ttl     = 1
+}
+
 # cloudflare provider v5 migration: move v4 cloudflare_record addresses to cloudflare_dns_record
 moved {
   from = cloudflare_record.minuma_a
