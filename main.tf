@@ -374,6 +374,20 @@ resource "cloudflare_ruleset" "hsts" {
           }
         }
       }
+    },
+    {
+      action      = "rewrite"
+      description = "X-Robots-Tag noindex for auth, api, mcp, pass-api"
+      enabled     = true
+      expression  = "(http.host in {\"auth.${local.zone_name}\" \"api.${local.zone_name}\" \"mcp.${local.zone_name}\" \"pass-api.${local.zone_name}\"})"
+      action_parameters = {
+        headers = {
+          "X-Robots-Tag" = {
+            operation = "set"
+            value     = "noindex, nofollow"
+          }
+        }
+      }
     }
   ]
 }
