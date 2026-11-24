@@ -41,3 +41,9 @@ variable "tunnel_origin_services" {
   })
   sensitive = true
 }
+
+variable "gsc_site_verification_txt" {
+  description = "Google Search Console domain verification TXT record content"
+  type        = string
+  sensitive   = true
+}

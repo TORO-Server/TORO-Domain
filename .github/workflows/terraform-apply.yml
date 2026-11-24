@@ -59,6 +59,7 @@ jobs:
           TF_VAR_argotunnel_cname_target: ${{ secrets.ARGOTUNNEL_CNAME_TARGET }}
           TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
           TF_VAR_tunnel_origin_services: ${{ secrets.TUNNEL_ORIGIN_SERVICES }}
+          TF_VAR_gsc_site_verification_txt: ${{ secrets.GSC_SITE_VERIFICATION_TXT }}
 
       - run: terraform apply tfplan
         env:
@@ -71,3 +72,4 @@ jobs:
           TF_VAR_argotunnel_cname_target: ${{ secrets.ARGOTUNNEL_CNAME_TARGET }}
           TF_VAR_gh_pages_challenge_content: ${{ secrets.GH_PAGES_CHALLENGE_CONTENT }}
           TF_VAR_tunnel_origin_services: ${{ secrets.TUNNEL_ORIGIN_SERVICES }}
+          TF_VAR_gsc_site_verification_txt: ${{ secrets.GSC_SITE_VERIFICATION_TXT }}
