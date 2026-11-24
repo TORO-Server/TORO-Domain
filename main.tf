@@ -388,6 +388,20 @@ resource "cloudflare_ruleset" "hsts" {
           }
         }
       }
+    },
+    {
+      action      = "rewrite"
+      description = "X-Robots-Tag noindex for assets non-MarumaSign paths"
+      enabled     = true
+      expression  = "(http.host eq \"assets.${local.zone_name}\" and http.request.method ne \"OPTIONS\" and (http.request.uri.path eq \"/\" or starts_with(http.request.uri.path, \"/map/\") or starts_with(http.request.uri.path, \"/map3d/\")))"
+      action_parameters = {
+        headers = {
+          "X-Robots-Tag" = {
+            operation = "set"
+            value     = "noindex, nofollow"
+          }
+        }
+      }
     }
   ]
 }
