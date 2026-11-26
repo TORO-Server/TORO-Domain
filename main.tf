@@ -13,11 +13,37 @@ resource "cloudflare_zone" "torosaba_net" {
 
 # ゲーム入口の AAAA。SLAAC でアドレスが変わり得るため content はホスト側の同期スクリプトが更新し、
 # Terraform はレコードの存在と TTL / proxied のみを管理する
+resource "cloudflare_dns_record" "minuma_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "minuma"
+  content = var.marumasa_ip
+  type    = "A"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 resource "cloudflare_dns_record" "minuma_aaaa" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "minuma"
   content = var.marumasa_ipv6
   type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "lgb_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "lgb"
+  content = var.marumasa_ip
+  type    = "A"
   proxied = false
   ttl     = 300
 
@@ -39,6 +65,19 @@ resource "cloudflare_dns_record" "lgb_aaaa" {
   }
 }
 
+resource "cloudflare_dns_record" "doro_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "doro"
+  content = var.marumasa_ip
+  type    = "A"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 resource "cloudflare_dns_record" "doro_aaaa" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "doro"
@@ -52,11 +91,37 @@ resource "cloudflare_dns_record" "doro_aaaa" {
   }
 }
 
+resource "cloudflare_dns_record" "toto_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "toto"
+  content = var.marumasa_ip
+  type    = "A"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 resource "cloudflare_dns_record" "toto_aaaa" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "toto"
   content = var.marumasa_ipv6
   type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "root_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = local.zone_name
+  content = var.marumasa_ip
+  type    = "A"
   proxied = false
   ttl     = 300
 
@@ -122,6 +187,19 @@ resource "cloudflare_dns_record" "pass_api_aaaa" {
   }
 }
 
+resource "cloudflare_dns_record" "pass_api_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "pass-api"
+  content = var.marumasa_ip
+  type    = "A"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 # 3D 地図 (TORO-Server/TORO-3D-WebMap) の静的な画面は GitHub Pages。公開のホスト名は 3d-map だけ (3d という名前は使わない)。
 # API は api.torosaba.net/map3d/v1。以前は Tunnel (従来の BlueMap の画面) に向けていた。戻すときはこの変更を revert する
 resource "cloudflare_dns_record" "bluemap_cname" {
@@ -139,6 +217,19 @@ resource "cloudflare_dns_record" "assets_aaaa" {
   name    = "assets"
   content = var.marumasa_ipv6
   type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "assets_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "assets"
+  content = var.marumasa_ip
+  type    = "A"
   proxied = false
   ttl     = 300
 
@@ -188,6 +279,19 @@ resource "cloudflare_dns_record" "auth_aaaa" {
   }
 }
 
+resource "cloudflare_dns_record" "auth_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "auth"
+  content = var.marumasa_ip
+  type    = "A"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 # AI コネクタ (認証サービス。DNS のみの AAAA で自前のサーバーへ直接)
 resource "cloudflare_dns_record" "mcp_aaaa" {
   zone_id = cloudflare_zone.torosaba_net.id
@@ -202,12 +306,38 @@ resource "cloudflare_dns_record" "mcp_aaaa" {
   }
 }
 
+resource "cloudflare_dns_record" "mcp_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "mcp"
+  content = var.marumasa_ip
+  type    = "A"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
 # REST API (認証サービス。DNS のみの AAAA で自前のサーバーへ直接)
 resource "cloudflare_dns_record" "api_aaaa" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "api"
   content = var.marumasa_ipv6
   type    = "AAAA"
+  proxied = false
+  ttl     = 300
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "cloudflare_dns_record" "api_a" {
+  zone_id = cloudflare_zone.torosaba_net.id
+  name    = "api"
+  content = var.marumasa_ip
+  type    = "A"
   proxied = false
   ttl     = 300
 

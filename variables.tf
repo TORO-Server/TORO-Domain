@@ -10,6 +10,12 @@ variable "cloudflare_account_id" {
   sensitive   = true
 }
 
+variable "marumasa_ip" {
+  description = "Global IP address of the server owner (marumasa)"
+  type        = string
+  sensitive   = true
+}
+
 variable "marumasa_ipv6" {
   description = "Global IPv6 address of the server owner (marumasa)"
   type        = string
