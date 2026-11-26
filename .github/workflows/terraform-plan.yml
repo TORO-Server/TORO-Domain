@@ -20,7 +20,6 @@ jobs:
       TF_IN_AUTOMATION: "true"
       TF_VAR_cloudflare_api_token: "0000000000000000000000000000000000000000"
       TF_VAR_cloudflare_account_id: "00000000000000000000000000000000"
-      TF_VAR_marumasa_ip: "192.0.2.1"
       TF_VAR_marumasa_ipv6: "2001:db8::1"
       TF_VAR_argotunnel_cname_target: "tunnel.example.invalid"
       TF_VAR_gh_pages_challenge_content: "placeholder"
