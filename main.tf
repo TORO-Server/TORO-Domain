@@ -11,51 +11,6 @@ resource "cloudflare_zone" "torosaba_net" {
   type = "full"
 }
 
-resource "cloudflare_dns_record" "minuma_a" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = "minuma"
-  content = var.marumasa_ip
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "lgb_a" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = "lgb"
-  content = var.marumasa_ip
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "doro_a" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = "doro"
-  content = var.marumasa_ip
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "toto_a" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = "toto"
-  content = var.marumasa_ip
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "root_a" {
-  zone_id = cloudflare_zone.torosaba_net.id
-  name    = local.zone_name
-  content = var.marumasa_ip
-  type    = "A"
-  proxied = false
-  ttl     = 1
-}
-
 # ゲーム入口の AAAA。SLAAC でアドレスが変わり得るため content はホスト側の同期スクリプトが更新し、
 # Terraform はレコードの存在と TTL / proxied のみを管理する
 resource "cloudflare_dns_record" "minuma_aaaa" {
@@ -273,26 +228,6 @@ resource "cloudflare_dns_record" "google_site_verification" {
 }
 
 # cloudflare provider v5 migration: move v4 cloudflare_record addresses to cloudflare_dns_record
-moved {
-  from = cloudflare_record.minuma_a
-  to   = cloudflare_dns_record.minuma_a
-}
-moved {
-  from = cloudflare_record.lgb_a
-  to   = cloudflare_dns_record.lgb_a
-}
-moved {
-  from = cloudflare_record.doro_a
-  to   = cloudflare_dns_record.doro_a
-}
-moved {
-  from = cloudflare_record.toto_a
-  to   = cloudflare_dns_record.toto_a
-}
-moved {
-  from = cloudflare_record.root_a
-  to   = cloudflare_dns_record.root_a
-}
 moved {
   from = cloudflare_record.www_cname
   to   = cloudflare_dns_record.www_cname
