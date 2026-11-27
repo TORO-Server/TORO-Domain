@@ -140,7 +140,7 @@ resource "cloudflare_dns_record" "pass_api_aaaa" {
   content = var.marumasa_ipv6
   type    = "AAAA"
   proxied = true
-  ttl     = 300
+  ttl = 1
 }
 
 resource "cloudflare_dns_record" "pass_api_a" {
@@ -149,7 +149,7 @@ resource "cloudflare_dns_record" "pass_api_a" {
   content = var.marumasa_ip
   type    = "A"
   proxied = true
-  ttl     = 300
+  ttl = 1
 }
 
 # 3D 地図 (TORO-Server/TORO-3D-WebMap) の静的な画面は GitHub Pages。公開のホスト名は 3d-map だけ (3d という名前は使わない)。
@@ -216,7 +216,7 @@ resource "cloudflare_dns_record" "auth_aaaa" {
   content = var.marumasa_ipv6
   type    = "AAAA"
   proxied = true
-  ttl     = 300
+  ttl = 1
 }
 
 resource "cloudflare_dns_record" "auth_a" {
@@ -225,7 +225,7 @@ resource "cloudflare_dns_record" "auth_a" {
   content = var.marumasa_ip
   type    = "A"
   proxied = true
-  ttl     = 300
+  ttl = 1
 }
 
 # AI コネクタ (認証サービス。DNS のみの AAAA で自前のサーバーへ直接)
@@ -254,7 +254,7 @@ resource "cloudflare_dns_record" "api_aaaa" {
   content = var.marumasa_ipv6
   type    = "AAAA"
   proxied = true
-  ttl     = 300
+  ttl = 1
 }
 
 resource "cloudflare_dns_record" "api_a" {
@@ -263,7 +263,7 @@ resource "cloudflare_dns_record" "api_a" {
   content = var.marumasa_ip
   type    = "A"
   proxied = true
-  ttl     = 300
+  ttl = 1
 }
 
 # なりすましメール防止のための SPF レコード (メール送信不許可)
