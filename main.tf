@@ -215,7 +215,7 @@ resource "cloudflare_dns_record" "auth_aaaa" {
   name    = "auth"
   content = var.marumasa_ipv6
   type    = "AAAA"
-  proxied = false
+  proxied = true
   ttl     = 300
 }
 
@@ -224,7 +224,7 @@ resource "cloudflare_dns_record" "auth_a" {
   name    = "auth"
   content = var.marumasa_ip
   type    = "A"
-  proxied = false
+  proxied = true
   ttl     = 300
 }
 
@@ -253,7 +253,7 @@ resource "cloudflare_dns_record" "api_aaaa" {
   name    = "api"
   content = var.marumasa_ipv6
   type    = "AAAA"
-  proxied = false
+  proxied = true
   ttl     = 300
 }
 
@@ -262,7 +262,7 @@ resource "cloudflare_dns_record" "api_a" {
   name    = "api"
   content = var.marumasa_ip
   type    = "A"
-  proxied = false
+  proxied = true
   ttl     = 300
 }
 
