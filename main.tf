@@ -139,7 +139,7 @@ resource "cloudflare_dns_record" "pass_api_aaaa" {
   name    = "pass-api"
   content = var.marumasa_ipv6
   type    = "AAAA"
-  proxied = false
+  proxied = true
   ttl     = 300
 }
 
@@ -148,7 +148,7 @@ resource "cloudflare_dns_record" "pass_api_a" {
   name    = "pass-api"
   content = var.marumasa_ip
   type    = "A"
-  proxied = false
+  proxied = true
   ttl     = 300
 }
 
