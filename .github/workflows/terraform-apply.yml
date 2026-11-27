@@ -42,8 +42,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      - name: Mask the tunnel id derived from the secret
-        env:
 
       - run: terraform plan -out=tfplan
         env:
