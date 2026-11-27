@@ -11,8 +11,8 @@ resource "cloudflare_zone" "torosaba_net" {
   type = "full"
 }
 
-# ゲーム入口の AAAA。SLAAC でアドレスが変わり得るため content はホスト側の同期スクリプトが更新し、
-# Terraform はレコードの存在と TTL / proxied のみを管理する
+# ゲーム入口と公開サービスの A / AAAA。アドレスは変数 marumasa_ip / marumasa_ipv6 で管理し、
+# Terraform が content を含めて管理する。アドレスが変わった場合は変数の値を更新して Apply する
 resource "cloudflare_dns_record" "minuma_a" {
   zone_id = cloudflare_zone.torosaba_net.id
   name    = "minuma"
@@ -20,10 +20,6 @@ resource "cloudflare_dns_record" "minuma_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "minuma_aaaa" {
@@ -33,10 +29,6 @@ resource "cloudflare_dns_record" "minuma_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "lgb_a" {
@@ -46,10 +38,6 @@ resource "cloudflare_dns_record" "lgb_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "lgb_aaaa" {
@@ -59,10 +47,6 @@ resource "cloudflare_dns_record" "lgb_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "doro_a" {
@@ -72,10 +56,6 @@ resource "cloudflare_dns_record" "doro_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "doro_aaaa" {
@@ -85,10 +65,6 @@ resource "cloudflare_dns_record" "doro_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "toto_a" {
@@ -98,10 +74,6 @@ resource "cloudflare_dns_record" "toto_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "toto_aaaa" {
@@ -111,10 +83,6 @@ resource "cloudflare_dns_record" "toto_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "root_a" {
@@ -124,10 +92,6 @@ resource "cloudflare_dns_record" "root_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "root_aaaa" {
@@ -137,10 +101,6 @@ resource "cloudflare_dns_record" "root_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 # 公式サイト (TORO-Server/TORO-Website) は GitHub Pages で www に置く。
@@ -181,10 +141,6 @@ resource "cloudflare_dns_record" "pass_api_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "pass_api_a" {
@@ -194,10 +150,6 @@ resource "cloudflare_dns_record" "pass_api_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 # 3D 地図 (TORO-Server/TORO-3D-WebMap) の静的な画面は GitHub Pages。公開のホスト名は 3d-map だけ (3d という名前は使わない)。
@@ -219,10 +171,6 @@ resource "cloudflare_dns_record" "assets_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "assets_a" {
@@ -232,10 +180,6 @@ resource "cloudflare_dns_record" "assets_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "sound_cname" {
@@ -273,10 +217,6 @@ resource "cloudflare_dns_record" "auth_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "auth_a" {
@@ -286,10 +226,6 @@ resource "cloudflare_dns_record" "auth_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 # AI コネクタ (認証サービス。DNS のみの AAAA で自前のサーバーへ直接)
@@ -300,10 +236,6 @@ resource "cloudflare_dns_record" "mcp_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "mcp_a" {
@@ -313,10 +245,6 @@ resource "cloudflare_dns_record" "mcp_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 # REST API (認証サービス。DNS のみの AAAA で自前のサーバーへ直接)
@@ -327,10 +255,6 @@ resource "cloudflare_dns_record" "api_aaaa" {
   type    = "AAAA"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 resource "cloudflare_dns_record" "api_a" {
@@ -340,10 +264,6 @@ resource "cloudflare_dns_record" "api_a" {
   type    = "A"
   proxied = false
   ttl     = 300
-
-  lifecycle {
-    ignore_changes = [content]
-  }
 }
 
 # なりすましメール防止のための SPF レコード (メール送信不許可)
