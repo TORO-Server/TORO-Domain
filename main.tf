@@ -353,17 +353,3 @@ moved {
   from = cloudflare_record.dmarc_record
   to   = cloudflare_dns_record.dmarc_record
 }
-
-# ゾーン設定。Cloudflare プロキシ適用に先立ち、SSL は Full (Strict) とし、WebSocket を有効にする。
-# オリジンには Let's Encrypt の証明書があるため Strict で検証できる。
-resource "cloudflare_zone_setting" "ssl" {
-  zone_id    = cloudflare_zone.torosaba_net.id
-  setting_id = "ssl"
-  value      = "strict"
-}
-
-resource "cloudflare_zone_setting" "websockets" {
-  zone_id    = cloudflare_zone.torosaba_net.id
-  setting_id = "websockets"
-  value      = "on"
-}
